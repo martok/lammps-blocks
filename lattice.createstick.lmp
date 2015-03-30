@@ -1,0 +1,9 @@
+# PURPOSE:
+#  fill simulation box with lattice as specified, having different Z-length
+# PARAMTERS:
+#  latCells  - number of elementary cells to create on X,Y axis
+#  latCellsZ - number of elementary cells to create on Z axis
+
+region				whole block 0 ${latCells} 0 ${latCells} 0 ${latCellsZ} units lattice
+create_box			1 whole
+create_atoms 		1 region whole

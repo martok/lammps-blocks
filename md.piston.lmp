@@ -1,0 +1,50 @@
+# PURPOSE:
+#  "piston hit", push bottom layers up
+# PARAMTERS:
+#  mdPistonSteps - number of steps to run for
+#  mdPistonSpeed - push speed in box units
+# DEPENDS:
+#  md.fixtemp.lmp for c_mdTempNew1
+
+reset_timestep		0
+
+compute 			csym all centro/atom ${latCSym}
+variable			cut equal 0.8536*${latConst}
+compute				cna_para all cna/atom ${cut}
+compute				pe all pe/atom
+
+
+variable 		tmp equal "lz"
+variable 		L0 equal ${tmp}
+
+variable		tmp equal ${L0}-5
+region			oben block INF INF INF INF ${tmp} INF units box
+group			oben region oben
+fix				piston_oben oben setforce 0.0 0.0 0.0
+velocity		oben set 0 0 0
+
+## fix piston
+#fix				piston_unten all wall/piston zlo pos 0 0 0 vel 0 0 ${mdPistonSpeed} units box
+fix				piston_unten all wall/piston zlo pos 0 vel ${mdPistonSpeed} units box
+
+## anvil
+#region			unten block INF INF INF INF INF 5 units box
+#group			unten region unten
+#fix				piston unten setforce 0 0 0
+#velocity		unten set 0 0 ${mdPistonSpeed} units box
+
+## defom box
+#fix				def_unten all deform 1 z vel -${mdPistonSpeed} remap v units box
+
+variable 		strain equal "(lz - v_L0)/v_L0"
+variable 		p1 equal "v_strain"
+variable 		p2 equal "-pxx/10000"	# GPa, da 1 bar = 0.1 MPa
+variable 		p3 equal "-pyy/10000"
+variable 		p4 equal "-pzz/10000"
+
+thermo 			1000
+thermo_style	custom step v_strain pxx pyy pzz ke pe etotal enthalpy c_mdTempNew1 vol
+dump 			dump1 all custom 500 out.${jobName}_anvil.dump id type xs ys zs c_csym c_cna_para c_pe
+fix 			txt1 all print 500 "${p1} ${p2} ${p3} ${p4}" file out.${jobName}_anvil.txt screen no
+
+run			${mdPistonSteps}

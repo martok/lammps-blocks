@@ -1,0 +1,13 @@
+# PURPOSE:
+#  minimize energy at a certain temperature
+# PARAMTERS:
+#  mdMiniSteps - number of steps to run for
+# DEPENDS:
+#  md.fixtemp.lmp for c_mdTempNew1
+
+reset_timestep	0
+
+thermo			100
+thermo_style	custom step press ke pe c_mdTempNew1
+
+run				${mdMiniSteps}

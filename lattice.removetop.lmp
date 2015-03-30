@@ -1,0 +1,8 @@
+# PURPOSE:
+#  slice away the top of the simulation box
+# PARAMTERS:
+#  latHeight  - new height of the box
+
+region			extra block INF INF INF INF 0 ${latHeight} units box side out
+delete_atoms	region extra
+region			extra delete

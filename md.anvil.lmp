@@ -1,0 +1,40 @@
+# PURPOSE:
+#  "anvil hit", push top layers to bottom
+# PARAMTERS:
+#  mdAnvilSteps - number of steps to run for
+#  mdAnvilSpeed - push speed in box units
+#  mdAnvilGrab  - region to move (box units)
+# DEPENDS:
+#  md.fixtemp.lmp for c_mdTempNew1
+
+reset_timestep		0
+
+compute 			csym all centro/atom ${latCSym}
+variable			cut equal 0.8536*${latConst}
+compute				cna_para all cna/atom ${cut}
+compute				pe all pe/atom
+
+
+variable 		tmp equal "lz"
+variable 		L0 equal ${tmp}
+
+variable		tmp equal ${L0}-${mdAnvilGrab}
+region			oben block INF INF INF INF ${tmp} INF units box
+group			oben region oben
+velocity		oben set 0.0 0.0 -${mdAnvilSpeed} units box
+fix				anvil_oben oben setforce 0.0 0.0 0.0
+
+
+
+variable 		strain equal "(lz - v_L0)/v_L0"
+variable 		p1 equal "v_strain"
+variable 		p2 equal "-pxx/10000"	# GPa, da 1 bar = 0.1 MPa
+variable 		p3 equal "-pyy/10000"
+variable 		p4 equal "-pzz/10000"
+
+thermo 			1000
+thermo_style		custom step v_strain pxx pyy pzz ke pe etotal enthalpy c_mdTempNew1 vol
+dump 			dump1 all custom 500 out.${jobName}_anvil.dump id type xs ys zs c_csym c_cna_para c_pe
+fix 			txt1 all print 500 "${p1} ${p2} ${p3} ${p4}" file out.${jobName}_anvil.txt screen no
+
+run			${mdAnvilSteps}

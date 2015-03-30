@@ -1,0 +1,3 @@
+# conversion factors from "unit metals" to SI
+variable		unitSpeed index 100			# m/s -> 1 A/ps
+variable		unitForce index 1.602E-9	# N -> 1 eV/A

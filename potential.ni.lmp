@@ -1,0 +1,5 @@
+pair_style 			eam/fs
+pair_coeff			* * Ni.eam.fs Ni
+neighbor			2 bin
+neigh_modify		once no every 1 delay 0 check yes
+

@@ -1,0 +1,34 @@
+# PURPOSE:
+#  nanoindentation run
+# PARAMTERS:
+#  mdIndentSteps - number of steps to run for
+#  mdIndentSpeed - indenter speed in box units
+#  mdIndentRad   - indenter radius
+#  mdIndentK     - intenter hardness
+
+reset_timestep		0
+
+compute 			csym all centro/atom ${latCSym}
+variable			cut equal 0.8536*${latConst}
+compute				cna_para all cna/atom ${cut}
+compute				pe all pe/atom
+
+variable			tmp equal lx/2
+variable			initialXY equal ${tmp}
+variable			tmp equal lz+${mdIndentRad}+10*dt*${mdIndentSpeed}
+variable			initialZ equal ${tmp}
+variable			delta equal step*dt*${mdIndentSpeed}
+variable			current equal ${initialZ}-v_delta
+fix					4 all indent ${mdIndentK} sphere ${initialXY} ${initialXY} v_current ${mdIndentRad} units box
+fix_modify			4 energy yes
+
+thermo 			100
+thermo_style		custom step v_current v_delta f_4[3] ke pe etotal enthalpy c_mdTempNew1
+
+dump 			dump1 all custom 1000 out.${jobName}_indent.dump id type xs ys zs c_csym c_cna_para c_pe
+variable		p1 equal "step"
+variable		p2 equal "v_delta"
+variable		p3 equal "f_4[3]"
+fix 			txt1 all print 100 "${p1} ${p2} ${p3} " file out.${jobName}_force.txt screen no
+
+run			${mdIndentSteps}

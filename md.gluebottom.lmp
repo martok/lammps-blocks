@@ -1,0 +1,10 @@
+# PURPOSE:
+#  fix the specified number of lattices to the bottom
+# PARAMTERS:
+#  mdGlueHeight   - number of lattices to hold fixed
+
+region			unten block INF INF INF INF 0 ${mdGlueHeight} units lattice
+group			rand region unten
+group			mitte subtract all rand
+
+fix				3 rand setforce 0.0 0.0 0.0

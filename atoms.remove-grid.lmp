@@ -1,0 +1,23 @@
+# PURPOSE:
+#  remove a 3x3 grid of atoms in the <001> plane
+# PARAMTERS:
+#  cx cy cz - center atom
+#  dxy      - distance of grid from center
+
+variable			xm equal ${cx}-${dxy}
+variable			xp equal ${cx}+${dxy}
+variable			ym equal ${cy}-${dxy}
+variable			yp equal ${cy}+${dxy}
+
+region				d1 sphere ${cx} ${cy} ${cz} 0.5 units box
+region				d2 sphere ${xm} ${ym} ${cz} 0.5 units box
+region				d3 sphere ${cx} ${ym} ${cz} 0.5 units box
+region				d4 sphere ${xp} ${ym} ${cz} 0.5 units box
+region				d5 sphere ${xm} ${cy} ${cz} 0.5 units box
+region				d6 sphere ${xp} ${cy} ${cz} 0.5 units box
+region				d7 sphere ${xm} ${yp} ${cz} 0.5 units box
+region				d8 sphere ${cx} ${yp} ${cz} 0.5 units box
+region				d9 sphere ${xp} ${yp} ${cz} 0.5 units box
+
+region				delete union 9 d1 d2 d3 d4 d5 d6 d7 d8 d9
+delete_atoms		region delete

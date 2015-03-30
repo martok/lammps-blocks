@@ -1,0 +1,10 @@
+# PURPOSE:
+#  call custom preparation file (ie. remove specific atoms)
+# PARAMTERS:
+#  custRemove  - file suffix to call, DEFAULT "none"
+
+variable	custRemove index none
+
+if			"${custRemove} == none" then "jump SELF lPostCustRemove"
+include		inc.custRemove-${custRemove}.lmp
+label		lPostCustRemove

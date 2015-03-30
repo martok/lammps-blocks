@@ -1,0 +1,11 @@
+# PURPOSE:
+#  apply fixes for constant temperature computation
+# PARAMTERS:
+#  T           - temperature to work at
+
+compute			mdTempNew1 all temp
+
+velocity		all create $T 43252 temp mdTempNew1
+
+fix				mdNVE all nve
+fix				mdTemp all temp/rescale 10 $T $T .01 1.0

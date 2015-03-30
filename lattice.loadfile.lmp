@@ -1,0 +1,6 @@
+# PURPOSE:
+#  load atoms from file
+# PARAMTERS:
+#  latFile  - data file name
+
+read_data		data.${latFile}.eam

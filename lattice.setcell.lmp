@@ -1,0 +1,7 @@
+# PURPOSE:
+#  setup basic simulation box without creating atoms
+# PARAMTERS:
+#  latCSym  - lattice type (bcc, fcc etc)
+#  latConst - lattice constant a    
+
+ lattice 		${latCSym} ${latConst} orient x 1 0 0 orient y 0 1 0 orient z 0 0 1

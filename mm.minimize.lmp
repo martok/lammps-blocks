@@ -1,0 +1,9 @@
+# PURPOSE:
+#  relax atom positions to minimize energy (pressure) state at constant simulation box
+# PARAMTERS:
+
+thermo 			20
+thermo_style 	custom step pe lx ly lz pxx pyy pzz
+
+min_style 		cg
+minimize 		1e-25 1e-25 5000 10000

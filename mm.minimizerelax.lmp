@@ -1,0 +1,12 @@
+# PURPOSE:
+#  relax simulation box to minimal energy (pressure) state
+# PARAMTERS:
+
+
+fix 			mini_relax all box/relax iso 0.0 vmax 0.001
+thermo 			20
+thermo_style 	custom step pe lx ly lz pxx pyy pzz
+
+min_style 		cg
+minimize 		1e-25 1e-25 5000 10000
+unfix			mini_relax

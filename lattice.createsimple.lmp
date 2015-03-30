@@ -1,0 +1,8 @@
+# PURPOSE:
+#  fill simulation box with lattice as specified
+# PARAMTERS:
+#  latCells  - number of elementary cells to create
+
+region				whole block 0 ${latCells} 0 ${latCells} 0 ${latCells} units lattice
+create_box			1 whole
+create_atoms 		1 region whole
