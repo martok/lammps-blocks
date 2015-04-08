@@ -1,0 +1,5 @@
+pair_style 			eam/alloy
+pair_coeff			* * cu_ag_ymwu.eam.alloy Cu Ag
+neighbor			2 bin
+neigh_modify		once no every 1 delay 0 check yes
+
